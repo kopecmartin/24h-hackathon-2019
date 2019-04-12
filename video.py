@@ -13,7 +13,7 @@ class Video:
                  FPS=60,
                  text="FAST\nFURIOUS\nFANCY",
                  title="Topanka",
-                 image=[
+                 image_paths=[
                      "data/pictures/topanka.png",
                      "data/pictures/topanka.png"
                  ],
@@ -28,7 +28,7 @@ class Video:
         self.FPS = FPS
         self.text = text
         self.title = title
-        self.image = image
+        self.image_paths = image_paths
         self.text_speed = text_speed
         self.font = font
         self.speed = speed
@@ -50,15 +50,17 @@ class Video:
             print("Error opening video stream or file")
         index = 0
 
+        # find out the video dimensions
+        self.width, self.height, _ = cap.read()[1].shape
+
         shape = Shape(
-            self.radius,
-            None,
+            self.width,
+            self.height,
             self.paint_x,
             self.paint_y,
             self.speed,
-            (0, 0, 0),
-            self.image[index],
-            0
+            self.image_paths[index % len(self.image_paths)],
+            'curve2',
         )
 
         effect = Effect(self.color_effect)
@@ -79,7 +81,7 @@ class Video:
                 break
             # import ipdb; ipdb.set_trace()
             if ret is True:
-                shape.paint(frame, self.width, self.height)
+                shape.paint(frame)
                 frame = effect.apply(frame)
                 frame = title.show_title(frame, self.width, self.height)
                 # frame = text.show_low(frame, self.width, self.height)
@@ -87,21 +89,20 @@ class Video:
                 # if title.counter == 1:
                 #     text.counter = title.counter
                 cv2.imshow("Frame", frame)
-                print(self.image)
+                # print(self.image_paths[index % len(self.image_paths)], index + 1)
                 if shape.end:
                     index += 1
-                    if index >= len(self.image):
+                    if index >= len(self.image_paths):
                         index = 0
 
                     shape = Shape(
-                        self.radius,
-                        None,
+                        self.width,
+                        self.height,
                         self.paint_x,
                         self.paint_y,
                         self.speed,
-                        (0, 0, 0),
-                        self.image[index],
-                        0
+                        self.image_paths[index % len(self.image_paths)],
+                        'curve2',
                     )
 
                 # Press Q on keyboard to  exit

@@ -112,7 +112,7 @@ if __name__ == "__main__":
     print(title)
     ad = Video(
         video_file=args[BACKGROUND],
-        image=downloaded,
+        image_paths=downloaded,
         title=title,
         text=data[PRODUCT_PRICE].strip('"'),
         text_speed=60,
