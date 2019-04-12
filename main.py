@@ -9,6 +9,7 @@ Authors:    Martin Kopec <xkopec42@gmail.com>
 
 import argparse
 import random
+from video import Video
 
 # used for argparse
 PRODUCT = "-p"
@@ -111,3 +112,6 @@ if __name__ == "__main__":
     print(data[PRODUCT_NAME])
     print(data[PRODUCT_PRICE])
     print(data[PRODUCT_SIZES])
+
+    ad = Video()
+    ad.play()
