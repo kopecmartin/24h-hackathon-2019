@@ -18,6 +18,7 @@ class Video:
                      "data/pictures/topanka.png"
                  ],
                  text_speed=20,
+                 font=None,
                  speed=6,
                  color_effect="red",
                  animation=None):
@@ -29,6 +30,7 @@ class Video:
         self.title = title
         self.image = image
         self.text_speed = text_speed
+        self.font = font
         self.speed = speed
         self.color_effect = color_effect
         self.animation = animation
@@ -55,34 +57,42 @@ class Video:
             self.paint_y,
             self.speed,
             (0, 0, 0),
-            self.image[index % len(self.image)],
+            self.image[index],
             0
         )
 
         effect = Effect(self.color_effect)
         text = Subtitles(self.text, self.text_speed, acceleration=4)
         # text = Subtitles('FAST\nFURIOUS\nFANCY', self.text_speed, './data/fonts/Dogfish/Dogfish.ttf')
-        title = Subtitles(self.title, self.text_speed, font='./data/fonts/Dogfish/Dogfish Oblique.ttf')
+
+        title = Subtitles(self.title, self.text_speed, font=self.font)
         title.font_scale = 1
         title.thick = 2
         # Read until video is completed
         while cap.isOpened():
             # Capture frame-by-frame
             ret, frame = cap.read()
-            self.width = frame.shape[1]
-            self.height = frame.shape[0]
+            try:
+                self.width = frame.shape[1]
+                self.height = frame.shape[0]
+            except AttributeError:
+                break
             # import ipdb; ipdb.set_trace()
             if ret is True:
                 shape.paint(frame, self.width, self.height)
                 frame = effect.apply(frame)
-                frame = title.show_continous(frame, self.width, self.height)
+                frame = title.show_title(frame, self.width, self.height)
                 # frame = text.show_low(frame, self.width, self.height)
-                frame = text.show_title(frame, self.width, self.height)
+                frame = text.show_price(frame, self.width, self.height)
                 # if title.counter == 1:
                 #     text.counter = title.counter
                 cv2.imshow("Frame", frame)
+                print(self.image)
                 if shape.end:
                     index += 1
+                    if index >= len(self.image):
+                        index = 0
+
                     shape = Shape(
                         self.radius,
                         None,
@@ -90,9 +100,10 @@ class Video:
                         self.paint_y,
                         self.speed,
                         (0, 0, 0),
-                        self.image[index % len(self.image)],
+                        self.image[index],
                         0
                     )
+
                 # Press Q on keyboard to  exit
                 if cv2.waitKey(25) & 0xFF == ord("q"):
                     return

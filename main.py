@@ -34,24 +34,11 @@ PRODUCT_SIZES = -1
 def parse_args():
     parser = argparse.ArgumentParser()
     parser.add_argument(
-        "-p",
-        "--product",
-        default=None,
-        help="Product images",
-    )
-    parser.add_argument(
         "-b",
         "--background",
         default="data/videos/4KRGBcolors.mp4",
         required=False,
         help="Background",
-    )
-    parser.add_argument(
-        "-t",
-        "--text",
-        default=None,
-        required=False,
-        help="Text to display",
     )
     parser.add_argument(
         "-a",
@@ -66,20 +53,6 @@ def parse_args():
         default=None,
         required=False,
         help="Font to use",
-    )
-    parser.add_argument(
-        "-s",
-        "--sticker",
-        default="data/stickers/doge.png",
-        required=False,
-        help="Font to use",
-    )
-    parser.add_argument(
-        "-P",
-        "--platform",
-        default=None,
-        required=False,
-        help="Target platform",
     )
 
     return parser.parse_args()
@@ -99,6 +72,7 @@ def get_random_line(csvfile="data/feeds/Footshop feed.csv"):
 def get_image(url):
     r = requests.get(url)
     img_name = url.split("=")[-1]+".png"
+    # import ipdb; ipdb.set_trace()
     with open(img_name, "wb") as f:
         f.write(r.content)
     return img_name
@@ -114,32 +88,35 @@ if __name__ == "__main__":
     for item in data:
         print(item)
 
-    if not args[PRODUCT]:
-        downloaded = []
-        images = data[PRODUCT_IMAGES].split(",") + \
-            [data[PRODUCT_IMAGE].strip('"')]
-        for image in images:
-            downloaded += [get_image(image.strip('"'))]
 
-    if not args[TEXT]:
-        print("=======================")
-        print(data[PRODUCT_NAME])
-        print(data[PRODUCT_PRICE])
-        print(data[PRODUCT_SIZES])
-        # if len(data[PRODUCT_NAME]) > 15:
-        #     data[PRODUCT_NAME].
-        # text = data[PRODUCT_NAME] + "\n" + data[PRODUCT_PRICE] + \
-        #     "\n" + data[PRODUCT_SIZES].replace(":", "\n").replace(",", "\n").replace("é", "e")
-        text = data[PRODUCT_NAME].replace('"', "")
+    downloaded = []
+    images = data[PRODUCT_IMAGES].split(",") + \
+        [data[PRODUCT_IMAGE].strip('"')]
+    for image in images:
+        # import ipdb; ipdb.set_trace()
+        downloaded += [get_image(image.strip('"'))]
+
+    print("=======================")
+    print(data[PRODUCT_NAME])
+    print(data[PRODUCT_PRICE])
+    print(data[PRODUCT_SIZES])
+    # if len(data[PRODUCT_NAME]) > 15:
+    #     data[PRODUCT_NAME].
+    # text = data[PRODUCT_NAME] + "\n" + data[PRODUCT_PRICE] + \
+    #     "\n" + data[PRODUCT_SIZES].replace(":", "\n").replace(",", "\n").replace("é", "e")
+    title = data[PRODUCT_NAME].replace('"', "")
+
     print("Downloda")
     print(downloaded)
-
+    print(args)
+    print(title)
     ad = Video(
-        video_file="data/videos/4KRGBcolors.mp4",
+        video_file=args[BACKGROUND],
         image=downloaded,
-        title=text,
+        title=title,
         text=data[PRODUCT_PRICE].strip('"'),
-        text_speed=60
+        text_speed=60,
+        font=args[FONT]
     )
 
     # ad = Video()
