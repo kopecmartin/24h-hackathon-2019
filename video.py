@@ -1,14 +1,14 @@
 import cv2
 import numpy as np
 
-width = 1280
-height = 720
+width = 1800
+height = 1080
 FPS = 24
 seconds = 10
 radius = 150
 
-paint_h = 800
 paint_x = 0
+paint_y = 0
 speed = 6
 
 # Create a VideoCapture object and read from input file
@@ -26,24 +26,34 @@ while(cap.isOpened()):
     ret, frame = cap.read()
     if ret is True:
         # Display the resulting frame
-        cv2.circle(frame, (paint_x, paint_h), radius, (0, 0, 0), -1)
-        # cv2.imshow('img', image)
-        # y1, y2 = paint_h, paint_h + image.shape[0]
-        # x1, x2 = paint_x, paint_x + image.shape[1]
-        #
-        # alpha_s = image[:, :, 3] / 255.0
-        # alpha_l = 1.0 - alpha_s
-        #
-        # for c in range(0, 3):
-        #     frame[y1:y2, x1:x2, c] = (alpha_s * image[:, :, c] +
-        #                               alpha_l * frame[y1:y2, x1:x2, c])
+        # cv2.circle(frame, (paint_x, paint_y), radius, (0, 0, 0), -1)
 
-        cv2.imshow('Frame', frame)
+        # I want to put logo on top-left corner, So I create a ROI
+        rows, cols, channels = image.shape
+        roi = frame[0:rows, 0:cols]
+        # Now create a mask of logo and create its inverse mask also
+        imagegray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+        ret, mask = cv2.threshold(imagegray, 10, 255, cv2.THRESH_BINARY)
+        mask_inv = cv2.bitwise_not(mask)
+        # Now black-out the area of logo in ROI
+        frame_bg = cv2.bitwise_and(roi, roi, mask=mask_inv)
+        # Take only region of logo from logo image.
+        image_fg = cv2.bitwise_and(image, image, mask=mask)
+        # Put logo in ROI and modify the main image
+        dst = cv2.add(frame_bg, image_fg)
 
         paint_x += speed
-        # paint_h += speed
-        if paint_x > width:
+        paint_y += speed
+        if paint_x + cols > height:
             paint_x = 0
+        if paint_y > width - cols:
+            paint_y = 0
+        # import ipdb; ipdb.set_trace()
+        print("paint_x:" + str(cols+paint_x))
+        print("paint_y:" + str(paint_y))
+
+        frame[paint_x:rows+paint_x, paint_y:cols+paint_y] = dst
+        cv2.imshow('Frame', frame)
 
         # Press Q on keyboard to  exit
         if cv2.waitKey(25) & 0xFF == ord('q'):
