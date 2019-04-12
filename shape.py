@@ -48,7 +48,6 @@ class Shape:
 
     def paint(self, frame):
         """Paint new position of image into a frame."""
-        import pudb; pudb.set_trace()
         self._next_pos()
         roi = frame[0 : self.dim[0], 0 : self.dim[1]] # noqa: 203
         __, mask = cv2.threshold(self.imagegrey, 10, 255, cv2.THRESH_BINARY)
@@ -82,6 +81,7 @@ class Shape:
         else:
             if self.y >= self.width:
                 self.y = 0
+                self.end = True
             animation_list, speed_list = self.animation_func
             self.x = int(animation_list[self.y])
             self.y += self.speed + int(speed_list[self.y])

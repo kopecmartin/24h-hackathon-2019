@@ -51,7 +51,7 @@ class Video:
         index = 0
 
         # find out the video dimensions
-        self.width, self.height, _ = cap.read()[1].shape
+        self.height, self.width, _ = cap.read()[1].shape
 
         shape = Shape(
             self.width,
@@ -81,8 +81,8 @@ class Video:
                 break
             # import ipdb; ipdb.set_trace()
             if ret is True:
-                shape.paint(frame)
                 frame = effect.apply(frame)
+                shape.paint(frame)
                 frame = title.show_title(frame, self.width, self.height)
                 # frame = text.show_low(frame, self.width, self.height)
                 frame = text.show_price(frame, self.width, self.height)
