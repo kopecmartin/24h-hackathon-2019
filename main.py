@@ -79,8 +79,9 @@ def get_random_line(csvfile="data/feeds/Footshop feed.csv"):
 
 def get_image(url):
     r = requests.get(url)
+    if not r.status_code == 200:
+        raise ValueError
     img_name = url.split("=")[-1]+".png"
-    # import ipdb; ipdb.set_trace()
     with open(img_name, "wb") as f:
         f.write(r.content)
     return img_name
@@ -93,16 +94,15 @@ if __name__ == "__main__":
         print(key, ":", args[key])
 
     data = get_random_line().split("\t")
-    for item in data:
-        print(item)
-
 
     downloaded = []
     images = data[PRODUCT_IMAGES].split(",") + \
         [data[PRODUCT_IMAGE].strip('"')]
     for image in images:
-        # import ipdb; ipdb.set_trace()
-        downloaded += [get_image(image.strip('"'))]
+        try:
+            downloaded += [get_image(image.strip('"'))]
+        except ValueError:
+            continue
 
     print("=======================")
     print(data[PRODUCT_NAME])

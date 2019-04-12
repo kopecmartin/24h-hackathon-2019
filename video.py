@@ -79,7 +79,7 @@ class Video:
                 self.height = frame.shape[0]
             except AttributeError:
                 break
-            # import ipdb; ipdb.set_trace()
+
             if ret is True:
                 frame = effect.apply(frame)
                 shape.paint(frame)
