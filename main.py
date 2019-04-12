@@ -111,7 +111,9 @@ if __name__ == "__main__":
     # if len(data[PRODUCT_NAME]) > 15:
     #     data[PRODUCT_NAME].
     # text = data[PRODUCT_NAME] + "\n" + data[PRODUCT_PRICE] + \
-    #     "\n" + data[PRODUCT_SIZES].replace(":", "\n").replace(",", "\n").replace("é", "e")
+    #     "\n" + data[PRODUCT_SIZES].replace(
+    #           ":", "\n").replace(",", "\n"
+    # ).replace("é", "e")
     title = data[PRODUCT_NAME].replace('"', "")
 
     print("Downloda")

@@ -27,7 +27,21 @@ class Video:
         self.height = height
         self.FPS = FPS
         self.text = text
-        self.title = title
+        self.title = ""
+        words = title.split(" ")
+        if len(words) > 3:
+            cnt = 0
+            for i in range(len(words)):
+                self.title += words[i]
+                cnt += 1
+                if cnt == 3:
+                    cnt = 0
+                    self.title += "\n"
+                else:
+                    self.title += " "
+        else:
+            self.title = title
+
         self.image_paths = image_paths
         self.text_speed = text_speed
         self.font = font
@@ -64,12 +78,13 @@ class Video:
         )
 
         effect = Effect(self.color_effect)
-        text = Subtitles(self.text, self.text_speed, acceleration=4)
+        text = Subtitles(self.text, self.text_speed,
+                         acceleration=3, font=self.font)
         # text = Subtitles('FAST\nFURIOUS\nFANCY', self.text_speed, './data/fonts/Dogfish/Dogfish.ttf')
 
         title = Subtitles(self.title, self.text_speed, font=self.font)
-        title.font_scale = 1
-        title.thick = 2
+        title.font_scale = 3
+        title.thick = 3
         # Read until video is completed
         while cap.isOpened():
             # Capture frame-by-frame

@@ -35,7 +35,16 @@ class Subtitles:
 
     def render(self, frame):
         cv2.putText(
-            frame, self.lines[self.index],
+            frame, self.lines[self.index].upper(),
+            (self.x, self.y),
+            cv2.FONT_HERSHEY_SIMPLEX,
+            self.font_scale,
+            (0,),
+            self.thick+3,
+            cv2.LINE_AA
+            )
+        cv2.putText(
+            frame, self.lines[self.index].upper(),
             (self.x, self.y),
             cv2.FONT_HERSHEY_SIMPLEX,
             self.font_scale,
@@ -50,12 +59,18 @@ class Subtitles:
         import numpy as np
         from PIL import ImageFont, ImageDraw, Image
 
-        font = ImageFont.truetype(self.font, 50)
+        font2 = ImageFont.truetype(self.font, 100)
+        font = ImageFont.truetype(self.font, 100)
         pil_im = Image.fromarray(frame)
         draw = ImageDraw.Draw(pil_im)
+
         draw.text(
             (self.x, self.y), self.lines[self.index],
+            font=font2, fill=(0, 0, 0))
+        draw.text(
+            (self.x-10, self.y-10), self.lines[self.index],
             font=font, fill=(255, 255, 255))
+
         return np.array(pil_im)
 
     def show_centered(self, frame, width, height):
@@ -70,13 +85,15 @@ class Subtitles:
         self.step()
         self.pos = 0 if self.pos + self.get_size()[0] >= width else self.pos + self.acceleration
         self.x = self.pos
-        self.y = height - int(size[1]*3)
+        self.y = height - int(size[1]*4)
         return self.custom_font(frame)
 
     def show_title(self, frame, width, height):
         size = self.get_size()
         self.step()
-        self.pos = 0 if self.pos + self.get_size()[0] >= width else self.pos + self.acceleration
-        self.x = self.pos
-        self.y = int(height/8) #- int(size[1]*3)
+        # self.pos = 0 if self.pos + self.get_size()[0] >= width else self.pos + self.acceleration
+        # self.x = self.pos
+        # self.y = int(height/8) # - int(size[1]*3)
+        self.x = int(width/2) - int(size[0]/2)
+        self.y = int(height/2) - int(size[1]/2)
         return self.render(frame)
