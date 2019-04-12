@@ -7,7 +7,7 @@ from effect import Effect
 
 class Video:
     def __init__(self,
-                 video_file="Pexels Videos 5004.mp4",
+                 video_file="./data/videos/Pexels Videos 5004.mp4",
                  width=1920,
                  height=1080,
                  FPS=60,
@@ -53,7 +53,7 @@ class Video:
             0,
         )
 
-        effect = Effect(self.effect)
+        effect = Effect(self.color_effect)
         text = Subtitles(self.text, self.text_speed)
         # text = Subtitles('FAST\nFURIOUS\nFANCY', self.text_speed, './data/fonts/Dogfish/Dogfish.ttf')
         # text = Subtitles('FAST\nFURIOUS\nFANCY', self.text_speed, './data/fonts/Dogfish/Dogfish Oblique.ttf')
