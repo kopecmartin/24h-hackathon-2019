@@ -1,5 +1,6 @@
 import cv2
 
+
 class Shape:
     """docstring for Shape"""
 

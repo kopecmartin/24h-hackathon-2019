@@ -2,6 +2,7 @@ import cv2
 
 from shape import Shape
 from subtitles import Subtitles
+from effect import Effect
 
 width = 1920
 height = 1080
@@ -33,6 +34,8 @@ shape = Shape(
     0,
 )
 text = Subtitles('FAST\nFURIOUS\nFANCY', text_speed)
+effect = Effect("red")
+
 # Read until video is completed
 while cap.isOpened():
     # Capture frame-by-frame
@@ -42,6 +45,7 @@ while cap.isOpened():
         text.show_continous(frame, width, height)
         text.show_low(frame, width, height)
         text.show_centered(frame, width, height)
+        frame = effect.apply(frame)
         cv2.imshow("Frame", frame)
 
         # Press Q on keyboard to  exit
