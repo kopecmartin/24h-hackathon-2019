@@ -8,7 +8,9 @@ Authors:    Martin Kopec <xkopec42@gmail.com>
 """
 
 import argparse
+import random
 
+# used for argparse
 PRODUCT = "-p"
 BACKGROUND = "-b"
 TEXT = "-t"
@@ -17,13 +19,21 @@ FONT = "-f"
 STICKER = "-s"
 PLATFORM = "-P"
 
+# used for csv data
+PRODUCT_NAME = 1
+PRODUCT_IMAGE = 3
+PRODUCT_PRICE = 4
+PRODUCT_IMAGES = 10
+PRODUCT_SIZES = -1
+
+
 
 def parse_args():
     parser = argparse.ArgumentParser()
     parser.add_argument(
         PRODUCT,
         "--product",
-        default=["data/pictures/02.jpeg"],
+        default=None,
         help="Product images",
     )
     parser.add_argument(
@@ -36,7 +46,7 @@ def parse_args():
     parser.add_argument(
         TEXT,
         "--text",
-        default="Hello World!",
+        default=None,
         required=False,
         help="Text to display",
     )
@@ -50,7 +60,7 @@ def parse_args():
     parser.add_argument(
         FONT,
         "--font",
-        default="data/fonts/",
+        default=None,
         required=False,
         help="Font to use",
     )
@@ -72,8 +82,32 @@ def parse_args():
     return parser.parse_args()
 
 
+def get_random_line(csvfile="data/feeds/Footshop feed.csv"):
+    lines = []
+    with open(csvfile) as f:
+        lines = [line for line in f]
+        filesize = len(lines)
+
+    offset = random.randrange(2, filesize)  # first 2 lines are comments
+
+    return lines[offset]
+
+
 if __name__ == "__main__":
     args = vars(parse_args())
     print("Hello world!\n")
     for key in args.keys():
         print(key, ":", args[key])
+
+    data = get_random_line().split("\t")
+    for item in data:
+        print(item)
+
+    print("-----")
+
+    print(data[PRODUCT_IMAGE])
+    print(data[PRODUCT_IMAGES].split(","))
+
+    print(data[PRODUCT_NAME])
+    print(data[PRODUCT_PRICE])
+    print(data[PRODUCT_SIZES])
