@@ -33,18 +33,20 @@ shape = Shape(
     "data/pictures/topanka.png",
     0,
 )
-text = Subtitles('FAST\nFURIOUS\nFANCY', text_speed)
-effect = Effect("red")
 
+effect = Effect('red')
+text = Subtitles('FAST\nFURIOUS\nFANCY', text_speed)
+text = Subtitles('FAST\nFURIOUS\nFANCY', text_speed, './data/fonts/Dogfish/Dogfish.ttf')
+text = Subtitles('FAST\nFURIOUS\nFANCY', text_speed, './data/fonts/Dogfish/Dogfish Oblique.ttf')
 # Read until video is completed
 while cap.isOpened():
     # Capture frame-by-frame
     ret, frame = cap.read()
     if ret is True:
         shape.paint(frame, width, height)
-        text.show_continous(frame, width, height)
-        text.show_low(frame, width, height)
-        text.show_centered(frame, width, height)
+        frame = text.show_continous(frame, width, height)
+        frame = text.show_low(frame, width, height)
+        frame = text.show_centered(frame, width, height)
         frame = effect.apply(frame)
         cv2.imshow("Frame", frame)
 
