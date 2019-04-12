@@ -4,7 +4,9 @@ import cv2
 class Subtitles:
     """docstring for."""
 
-    def __init__(self, text, speed=20, font='./data/fonts/Flanella/Flanella.ttf'):
+    def __init__(self, text, speed=20, acceleration=6,
+                 font='./data/fonts/Flanella/Flanella.ttf'):
+        self.acceleration = acceleration
         self.lines = text.splitlines()
         self.length = len(self.lines)
         self.speed = speed
@@ -13,7 +15,7 @@ class Subtitles:
         self.counter = 0
         self.pos = 0
         # heigth
-        self.font_scale = 5
+        self.font_scale = 2
         # thickeness
         self.thick = 6
         self.x = 0
@@ -27,8 +29,9 @@ class Subtitles:
 
     def get_size(self):
         return cv2.getTextSize(
-            self.lines[self.index], cv2.FONT_HERSHEY_SIMPLEX, self.font_scale, self.thick
-            )[0]
+            self.lines[self.index], cv2.FONT_HERSHEY_SIMPLEX,
+            self.font_scale, self.thick
+        )[0]
 
     def render(self, frame):
         cv2.putText(
@@ -58,21 +61,22 @@ class Subtitles:
     def show_centered(self, frame, width, height):
         size = self.get_size()
         self.x = int(width/2) - int(size[0]/2)
-        self.y = int(height/2) - int(size[1]/2)
+        self.y = int(height) - int(size[1]/2)
         self.step()
         return self.render(frame)
 
-    def show_low(self, frame, width, height):
+    def show_title(self, frame, width, height):
         size = self.get_size()
-        self.x = int(width/2) - int(size[0]/2)
-        # self.y = height - int(size[1]*2)
         self.step()
+        self.pos = 0 if self.pos + self.get_size()[0] >= width else self.pos + self.acceleration
+        self.x = self.pos
+        self.y = height - int(size[1]*3)
         return self.render(frame)
 
     def show_continous(self, frame, width, height):
         size = self.get_size()
         self.step()
-        self.pos = 0 if self.pos + self.get_size()[0] >= width else self.pos + 6
+        self.pos = 0 if self.pos + self.get_size()[0] >= width else self.pos + self.acceleration
         self.x = self.pos
         self.y = height - int(size[1]*3)
         return self.render(frame)

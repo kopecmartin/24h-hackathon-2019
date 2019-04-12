@@ -8,17 +8,20 @@ Authors:    Martin Kopec <xkopec42@gmail.com>
 """
 
 import argparse
+import os
 import random
+import requests
+
 from video import Video
 
-# used for argparse
-PRODUCT = "-p"
-BACKGROUND = "-b"
-TEXT = "-t"
-ANIMATION = "-a"
-FONT = "-f"
-STICKER = "-s"
-PLATFORM = "-P"
+# arg keys
+PRODUCT = "product"
+BACKGROUND = "background"
+TEXT = "text"
+ANIMATION = "animation"
+FONT = "font"
+STICKER = "sticker"
+PLATFORM = "platform"
 
 # used for csv data
 PRODUCT_NAME = 1
@@ -28,52 +31,51 @@ PRODUCT_IMAGES = 10
 PRODUCT_SIZES = -1
 
 
-
 def parse_args():
     parser = argparse.ArgumentParser()
     parser.add_argument(
-        PRODUCT,
+        "-p",
         "--product",
         default=None,
         help="Product images",
     )
     parser.add_argument(
-        BACKGROUND,
+        "-b",
         "--background",
         default="data/videos/4KRGBcolors.mp4",
         required=False,
         help="Background",
     )
     parser.add_argument(
-        TEXT,
+        "-t",
         "--text",
         default=None,
         required=False,
         help="Text to display",
     )
     parser.add_argument(
-        ANIMATION,
+        "-a",
         "--animation",
         default=None,
         required=False,
         help="Animation",
     )
     parser.add_argument(
-        FONT,
+        "-f",
         "--font",
         default=None,
         required=False,
         help="Font to use",
     )
     parser.add_argument(
-        STICKER,
+        "-s",
         "--sticker",
         default="data/stickers/doge.png",
         required=False,
         help="Font to use",
     )
     parser.add_argument(
-        PLATFORM,
+        "-P",
         "--platform",
         default=None,
         required=False,
@@ -94,6 +96,14 @@ def get_random_line(csvfile="data/feeds/Footshop feed.csv"):
     return lines[offset]
 
 
+def get_image(url):
+    r = requests.get(url)
+    img_name = url.split("=")[-1]+".png"
+    with open(img_name, "wb") as f:
+        f.write(r.content)
+    return img_name
+
+
 if __name__ == "__main__":
     args = vars(parse_args())
     print("Hello world!\n")
@@ -104,14 +114,35 @@ if __name__ == "__main__":
     for item in data:
         print(item)
 
-    print("-----")
+    if not args[PRODUCT]:
+        downloaded = []
+        images = data[PRODUCT_IMAGES].split(",") + \
+            [data[PRODUCT_IMAGE].strip('"')]
+        for image in images:
+            downloaded += [get_image(image.strip('"'))]
 
-    print(data[PRODUCT_IMAGE])
-    print(data[PRODUCT_IMAGES].split(","))
+    if not args[TEXT]:
+        print("=======================")
+        print(data[PRODUCT_NAME])
+        print(data[PRODUCT_PRICE])
+        print(data[PRODUCT_SIZES])
+        # if len(data[PRODUCT_NAME]) > 15:
+        #     data[PRODUCT_NAME].
+        # text = data[PRODUCT_NAME] + "\n" + data[PRODUCT_PRICE] + \
+        #     "\n" + data[PRODUCT_SIZES].replace(":", "\n").replace(",", "\n").replace("é", "e")
+        text = data[PRODUCT_NAME].replace('"', "")
+    print("Downloda")
+    print(downloaded)
 
-    print(data[PRODUCT_NAME])
-    print(data[PRODUCT_PRICE])
-    print(data[PRODUCT_SIZES])
+    ad = Video(
+        video_file="data/videos/4KRGBcolors.mp4",
+        image=downloaded,
+        title=text,
+        text=data[PRODUCT_PRICE].strip('"'),
+        text_speed=60
+    )
 
-    ad = Video()
+    # ad = Video()
     ad.play()
+    for tmp_image in downloaded:
+        os.remove(tmp_image)

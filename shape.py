@@ -5,12 +5,18 @@ class Shape:
     """docstring for Shape"""
 
     def __init__(self, size, shape, x, y, speed, color, image, animation):
+        self.end = False
         self.size = size
         self.shape = shape
         self.x = x
         self.y = y
         self.color = color
         self.image = cv2.imread(image, -1) if image else None
+        height, width, depth = self.image.shape
+        imgScale = 600/width
+        newX, newY = self.image.shape[1]*imgScale, self.image.shape[0]*imgScale
+        self.image = cv2.resize(self.image, (int(newX), int(newY)))
+        # self.image = cv2.resize(self.image, (int(250), int(200)))
         self.imagegrey = cv2.cvtColor(self.image, cv2.COLOR_BGR2GRAY)
         self.animation = animation
         self.speed = speed
@@ -41,7 +47,8 @@ class Shape:
         if self.animation == 0:
             self.x += self.speed
             self.y += self.speed
-            if self.x + self.dim[1] > frame_height:
+            if self.x + self.dim[0] > frame_height:
                 self.x = 0
             if self.y > frame_width - self.dim[1]:
                 self.y = 0
+                self.end = True
