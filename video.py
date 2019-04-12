@@ -1,5 +1,6 @@
 import cv2
 import numpy as np
+from shape import Shape
 
 width = 1280
 height = 720
@@ -20,13 +21,15 @@ image = cv2.imread('topanka.png', -1)
 if (cap.isOpened() is False):
     print("Error opening video stream or file")
 
+shape = Shape(radius, 'circle', paint_x, paint_h, speed, (0, 0, 0), None, 0)
 # Read until video is completed
 while(cap.isOpened()):
     # Capture frame-by-frame
     ret, frame = cap.read()
     if ret is True:
         # Display the resulting frame
-        cv2.circle(frame, (paint_x, paint_h), radius, (0, 0, 0), -1)
+        # cv2.circle(frame, (paint_x, paint_h), radius, (0, 0, 0), -1)
+        shape.paint(frame, width)
         # cv2.imshow('img', image)
         # y1, y2 = paint_h, paint_h + image.shape[0]
         # x1, x2 = paint_x, paint_x + image.shape[1]
