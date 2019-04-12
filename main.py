@@ -16,6 +16,7 @@ from video import Video
 
 # arg keys
 PRODUCT = "product"
+EFFECT = "effect"
 BACKGROUND = "background"
 TEXT = "text"
 ANIMATION = "animation"
@@ -53,6 +54,13 @@ def parse_args():
         default=None,
         required=False,
         help="Font to use",
+    )
+    parser.add_argument(
+        "-e",
+        "--effect",
+        default="green",
+        required=False,
+        help="Color effect to use",
     )
 
     return parser.parse_args()
@@ -116,7 +124,8 @@ if __name__ == "__main__":
         title=title,
         text=data[PRODUCT_PRICE].strip('"'),
         text_speed=60,
-        font=args[FONT]
+        font=args[FONT],
+        color_effect=args[EFFECT]
     )
 
     # ad = Video()
