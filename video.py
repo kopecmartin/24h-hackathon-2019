@@ -14,6 +14,7 @@ speed = 6
 # Create a VideoCapture object and read from input file
 # If the input is the camera, pass 0 instead of the video file name
 cap = cv2.VideoCapture('Pexels Videos 5004.mp4')
+image = cv2.imread('topanka.png', -1)
 
 # Check if camera opened successfully
 if (cap.isOpened() is False):
@@ -26,6 +27,17 @@ while(cap.isOpened()):
     if ret is True:
         # Display the resulting frame
         cv2.circle(frame, (paint_x, paint_h), radius, (0, 0, 0), -1)
+        # cv2.imshow('img', image)
+        # y1, y2 = paint_h, paint_h + image.shape[0]
+        # x1, x2 = paint_x, paint_x + image.shape[1]
+        #
+        # alpha_s = image[:, :, 3] / 255.0
+        # alpha_l = 1.0 - alpha_s
+        #
+        # for c in range(0, 3):
+        #     frame[y1:y2, x1:x2, c] = (alpha_s * image[:, :, c] +
+        #                               alpha_l * frame[y1:y2, x1:x2, c])
+
         cv2.imshow('Frame', frame)
 
         paint_x += speed
