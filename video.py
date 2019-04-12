@@ -39,7 +39,9 @@ while cap.isOpened():
     ret, frame = cap.read()
     if ret is True:
         shape.paint(frame, width, height)
-        text.show(frame, width, height)
+        text.show_continous(frame, width, height)
+        text.show_low(frame, width, height)
+        text.show_centered(frame, width, height)
         cv2.imshow("Frame", frame)
 
         # Press Q on keyboard to  exit
