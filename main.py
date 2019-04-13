@@ -28,6 +28,8 @@ MULTI = "multi"
 TITLE = "title"
 PRICE = "price"
 RENDER = "render"
+LINE = "line"
+OUTPUT = "output"
 
 
 # used for csv data
@@ -108,11 +110,27 @@ def parse_args():
         required=False,
         help="Show realtime rendering.",
     )
+    parser.add_argument(
+        "-l",
+        "--line",
+        default=None,
+        type=int,
+        required=False,
+        help="Line from csv.",
+    )
+    parser.add_argument(
+        "-o",
+        "--output",
+        default="output.mp4",
+        type=str,
+        required=False,
+        help="Output file.",
+    )
 
     return parser.parse_args()
 
 
-def get_random_line(csvfile="data/feeds/Footshop feed.csv"):
+def get_random_line(csvfile="data/feeds/Footshop feed.csv", line=None):
     lines = []
     with open(csvfile) as f:
         lines = [line for line in f]
@@ -120,7 +138,7 @@ def get_random_line(csvfile="data/feeds/Footshop feed.csv"):
 
     offset = random.randrange(2, filesize)  # first 2 lines are comments
 
-    return lines[offset]
+    return lines[offset if not line else line+2]
 
 
 def get_image(url):
@@ -135,13 +153,13 @@ def get_image(url):
 
 if __name__ == "__main__":
     args = vars(parse_args())
-    print("Hello world!\n")
+    print("Hello ROIHUNTER!\n")
     for key in args.keys():
         print(key, ":", args[key])
 
     downloaded = []
     while not downloaded:
-        data = get_random_line().split("\t")
+        data = get_random_line(line=args[LINE]).split("\t")
         images = data[PRODUCT_IMAGES].split(",") + \
             [data[PRODUCT_IMAGE].strip('"')]
         for image in images:
@@ -150,23 +168,12 @@ if __name__ == "__main__":
             except ValueError:
                 continue
 
-    print("=======================")
-    print(data[PRODUCT_NAME])
-    print(data[PRODUCT_PRICE])
-    print(data[PRODUCT_SIZES])
-    # if len(data[PRODUCT_NAME]) > 15:
-    #     data[PRODUCT_NAME].
-    # text = data[PRODUCT_NAME] + "\n" + data[PRODUCT_PRICE] + \
-    #     "\n" + data[PRODUCT_SIZES].replace(
-    #           ":", "\n").replace(",", "\n"
-    # ).replace("é", "e")
+    if args[MULTI]:
+        downloaded = ["data/sale/doge.png", "data/sale/kod.png"] + downloaded
+        print(downloaded)
+
     title = data[PRODUCT_NAME].replace('"', "")
 
-    print("Downloda")
-    print(downloaded)
-    print(args)
-    print(title)
-    print("args[TITLE]", args[TITLE])
     ad = Video(
         video_file=args[BACKGROUND],
         image_paths=downloaded,
@@ -179,9 +186,10 @@ if __name__ == "__main__":
         speed=args[SPEED],
         multi=args[MULTI],
         render=args[RENDER],
+        output=args[OUTPUT]
     )
 
-    # ad = Video()
     ad.play()
     for tmp_image in downloaded:
-        os.remove(tmp_image)
+        if tmp_image not in ["data/sale/doge.png", "data/sale/kod.png"]:
+            os.remove(tmp_image)

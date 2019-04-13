@@ -24,7 +24,8 @@ class Video:
                  color_effect="red",
                  animation="curve2",
                  multi=False,
-                 render=False):
+                 render=False,
+                 output="output.mp4"):
         self.video_file = video_file
         self.width = width
         self.height = height
@@ -53,6 +54,7 @@ class Video:
         self.animation = animation
         self.multi = multi
         self.render = render
+        self.output = output
 
         self.paint_x = 0
         self.paint_y = 0
@@ -86,10 +88,12 @@ class Video:
                 self.height,
                 randint(0, self.width),
                 randint(0, self.height),
+                # int(self.height / 4 * (i + 1)),
+                # int(self.width / (4 * (i + 1))),
                 self.speed,
                 image,
                 "fall",  # must be with fall!!! it's 02:03am
-            ) for image in self.image_paths[:2]]
+            ) for i, image in enumerate(self.image_paths[:4])]
 
         effect = Effect(self.color_effect)
         text = Subtitles(self.text, self.text_speed,
@@ -110,7 +114,7 @@ class Video:
 
         # print("width ", frame_width)
         # print("height ", frame_height)
-        out = cv2.VideoWriter('outpy.mp4', cv2.VideoWriter_fourcc(*'MP4V'),
+        out = cv2.VideoWriter(self.output, cv2.VideoWriter_fourcc(*'MP4V'),
                               17, (self.width, self.height))
 
         while cap.isOpened():
@@ -129,6 +133,8 @@ class Video:
                         shape.paint(frame)
                 else:
                     shape.paint(frame)
+                    pass
+
                 frame = title.show_title(frame, self.width, self.height)
                 # frame = text.show_low(frame, self.width, self.height)
                 frame = text.show_price(frame, self.width, self.height)
