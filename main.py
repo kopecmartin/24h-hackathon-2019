@@ -25,6 +25,10 @@ STICKER = "sticker"
 PLATFORM = "platform"
 SPEED = "speed"
 MULTI = "multi"
+TITLE = "title"
+PRICE = "price"
+RENDER = "render"
+
 
 # used for csv data
 PRODUCT_NAME = 1
@@ -46,14 +50,14 @@ def parse_args():
     parser.add_argument(
         "-a",
         "--animation",
-        default=None,
+        default="curve4",
         required=False,
         help="Animation",
     )
     parser.add_argument(
         "-f",
         "--font",
-        default=None,
+        default="data/fonts/Dogfish/Dogfish.ttf",
         required=False,
         help="Font to use",
     )
@@ -79,6 +83,30 @@ def parse_args():
         type=bool,
         required=False,
         help="Multiple product images on video frame.",
+    )
+    parser.add_argument(
+        "-t",
+        "--title",
+        default=1,
+        type=int,
+        required=False,
+        help="Show title text.",
+    )
+    parser.add_argument(
+        "-p",
+        "--price",
+        default=1,
+        type=int,
+        required=False,
+        help="Show price tag.",
+    )
+    parser.add_argument(
+        "-r",
+        "--render",
+        default=False,
+        action="store_true",
+        required=False,
+        help="Show realtime rendering.",
     )
 
     return parser.parse_args()
@@ -138,17 +166,19 @@ if __name__ == "__main__":
     print(downloaded)
     print(args)
     print(title)
+    print("args[TITLE]", args[TITLE])
     ad = Video(
         video_file=args[BACKGROUND],
         image_paths=downloaded,
-        title=title,
-        text=data[PRODUCT_PRICE].strip('"'),
+        title=title if args[TITLE] else "",
+        text=data[PRODUCT_PRICE].strip('"') if args[PRICE] else "",
         text_speed=60,
         font=args[FONT],
         color_effect=args[EFFECT],
         animation=args[ANIMATION],
         speed=args[SPEED],
         multi=args[MULTI],
+        render=args[RENDER],
     )
 
     # ad = Video()
