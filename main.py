@@ -27,6 +27,8 @@ SPEED = "speed"
 MULTI = "multi"
 TITLE = "title"
 PRICE = "price"
+RENDER = "render"
+
 
 # used for csv data
 PRODUCT_NAME = 1
@@ -48,7 +50,7 @@ def parse_args():
     parser.add_argument(
         "-a",
         "--animation",
-        default="curve2",
+        default="curve4",
         required=False,
         help="Animation",
     )
@@ -97,6 +99,14 @@ def parse_args():
         type=int,
         required=False,
         help="Show price tag.",
+    )
+    parser.add_argument(
+        "-r",
+        "--render",
+        default=False,
+        action="store_true",
+        required=False,
+        help="Show realtime rendering.",
     )
 
     return parser.parse_args()
@@ -168,6 +178,7 @@ if __name__ == "__main__":
         animation=args[ANIMATION],
         speed=args[SPEED],
         multi=args[MULTI],
+        render=args[RENDER],
     )
 
     # ad = Video()

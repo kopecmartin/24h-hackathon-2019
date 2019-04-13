@@ -23,7 +23,8 @@ class Video:
                  speed=6,
                  color_effect="red",
                  animation="curve2",
-                 multi=False):
+                 multi=False,
+                 render=False):
         self.video_file = video_file
         self.width = width
         self.height = height
@@ -51,6 +52,7 @@ class Video:
         self.color_effect = color_effect
         self.animation = animation
         self.multi = multi
+        self.render = render
 
         self.paint_x = 0
         self.paint_y = 0
@@ -132,7 +134,8 @@ class Video:
                 frame = text.show_price(frame, self.width, self.height)
                 # if title.counter == 1:
                 #     text.counter = title.counter
-                cv2.imshow("Frame", frame)
+                if self.render:
+                    cv2.imshow("Frame", frame)
                 out.write(frame)
                 if not self.multi and shape.end:
                     index += 1
