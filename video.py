@@ -92,15 +92,17 @@ class Video:
         effect = Effect(self.color_effect)
         text = Subtitles(self.text, self.text_speed,
                          acceleration=3, font=self.font)
-        # text = Subtitles('FAST\nFURIOUS\nFANCY', self.text_speed, './data/fonts/Dogfish/Dogfish.ttf')
+        # text = Subtitles('FAST\nFURIOUS\nFANCY', self.text_speed,
+        #                  './data/fonts/Dogfish/Dogfish.ttf')
 
         title = Subtitles(self.title, self.text_speed, font=self.font)
         title.font_scale = 3
         title.thick = 3
         # Read until video is completed
 
-        # Default resolutions of the frame are obtained.The default resolutions are system dependent.
-        # We convert the resolutions from float to integer.
+        # Default resolutions of the frame are obtained.The default resolutions
+        # are system dependent. We convert the resolutions from float to
+        # integer.
         # frame_width = int(cap.get(3))
         # frame_height = int(cap.get(4))
 
@@ -132,7 +134,6 @@ class Video:
                 #     text.counter = title.counter
                 cv2.imshow("Frame", frame)
                 out.write(frame)
-                # print(self.image_paths[index % len(self.image_paths)], index + 1)
                 if not self.multi and shape.end:
                     index += 1
                     if index >= len(self.image_paths):

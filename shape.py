@@ -1,6 +1,5 @@
 import cv2
 import numpy as np
-import math
 
 
 class Shape:
@@ -14,12 +13,12 @@ class Shape:
             [0.1, 0.15, 0.25, 0.40, 0.5, 0.65, 0.75, 0.8, 0.85, 0.9],
             # speed diffs at the x points
             [0, 0, 0, 1, 3, 3, 3, 5, 5, 9],
-    ],
-        'curve2':[
+        ],
+        'curve2': [
             np.linspace(0, 1, 10),
             [0.1, 0.15, 0.4, 0.6, 0.7, 0.75, 0.7, 0.5, 0.3, 0.1],
             [0, 15, 50, 50, 45, 0, 0, 20, 35, 100],
-    ],
+        ],
         'curve3': [
             np.linspace(0, 1, 10),
             [0.8, 0.75, 0.7, 0.6, 0.4, 0.1, 0.4, 0.6, 0.8, 0.9],
@@ -31,7 +30,8 @@ class Shape:
             [0.45] * 10,
             [0] * 10,
         ],
-        # it's a fall (almost 1:30am) :D It's fallin' down, I'm yellin' timber...
+        # it's a fall (almost 1:30am) :D
+        # If it's fallin' down, I'm yellin' timber...
         'fall': [
             np.linspace(0, 1, 10),
             [0.5, 0.45, 0.5, 0.45, 0.4, 0.45, 0.5, 0.4, 0.43, 0.5],
@@ -47,14 +47,14 @@ class Shape:
         self.y = y
         self.image = cv2.imread(image, -1) if image else None
         height, width, depth = self.image.shape
-        imgScale = 600/width
-        newX, newY = self.image.shape[1]*imgScale, self.image.shape[0]*imgScale
-        self.image = cv2.resize(self.image, (int(newX), int(newY)))
+        img_scale = 600/width
+        new_x = self.image.shape[1]*img_scale
+        new_y = self.image.shape[0]*img_scale
+        self.image = cv2.resize(self.image, (int(new_x), int(new_y)))
         self.imagegrey = cv2.cvtColor(self.image, cv2.COLOR_BGR2GRAY)
         self.speed = speed
         # rows, cols, channels
         self.dim = self.image.shape
-        #import pudb; pudb.set_trace()
         if x < width / 2:
             self.offset = - int(self.dim[1] / 2)
         else:
@@ -68,7 +68,7 @@ class Shape:
     def paint(self, frame):
         """Paint new position of image into a frame."""
         self._next_pos()
-        roi = frame[0 : self.dim[0], 0 : self.dim[1]] # noqa: 203
+        roi = frame[0: self.dim[0], 0: self.dim[1]]  # noqa: 203
         __, mask = cv2.threshold(self.imagegrey, 10, 255, cv2.THRESH_BINARY)
         mask_inv = cv2.bitwise_not(mask)
         # Now black-out the area of logo in ROI
@@ -78,13 +78,13 @@ class Shape:
         # Put logo in ROI and modify the main image
         dst = cv2.add(frame_bg, image_fg)
 
-        if (self.x + self.dim[0] > self.height) or (self.y > self.width - self.dim[1]):
+        if (self.x + self.dim[0] > self.height) or \
+                (self.y > self.width - self.dim[1]):
             return
         if self.image is not None:
-            print(self.width, self.height, self.dim, (self.dim[0] + self.x),(self.dim[1] + self.y))
             frame[
-                self.x : (self.dim[0] + self.x),  # noqa: 203
-                self.y : (self.dim[1] + self.y),  # noqa: 203
+                self.x: (self.dim[0] + self.x),  # noqa: 203
+                self.y: (self.dim[1] + self.y),  # noqa: 203
             ] = dst
 
     def _next_pos(self):

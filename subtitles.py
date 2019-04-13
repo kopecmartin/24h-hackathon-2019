@@ -83,7 +83,10 @@ class Subtitles:
     def show_price(self, frame, width, height):
         size = self.get_size()
         self.step()
-        self.pos = 0 if self.pos + self.get_size()[0] >= width else self.pos + self.acceleration
+        if self.pos + self.get_size()[0] >= width:
+            self.pos = 0
+        else:
+            self.pos += self.acceleration
         self.x = self.pos
         self.y = height - int(size[1]*4)
         return self.custom_font(frame)
@@ -91,7 +94,10 @@ class Subtitles:
     def show_title(self, frame, width, height):
         size = self.get_size()
         self.step()
-        # self.pos = 0 if self.pos + self.get_size()[0] >= width else self.pos + self.acceleration
+        # if self.pos + self.get_size()[0] >= width:
+        #     self.pos = 0
+        # else:
+        #     self.pos += self.acceleration
         # self.x = self.pos
         # self.y = int(height/8) # - int(size[1]*3)
         self.x = int(width/2) - int(size[0]/2)
