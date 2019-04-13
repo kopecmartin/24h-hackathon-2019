@@ -7,7 +7,7 @@ class Subtitles:
     def __init__(self, text, speed=20, acceleration=6,
                  font='./data/fonts/Flanella/Flanella.ttf'):
         self.acceleration = acceleration
-        self.lines = text.splitlines()
+        self.lines = text.splitlines() if text else " "
         self.length = len(self.lines)
         self.speed = speed
         self.font = font

@@ -22,7 +22,7 @@ class Video:
                  font=None,
                  speed=6,
                  color_effect="red",
-                 animation=None,
+                 animation="curve2",
                  multi=False):
         self.video_file = video_file
         self.width = width
@@ -93,7 +93,6 @@ class Video:
         text = Subtitles(self.text, self.text_speed,
                          acceleration=3, font=self.font)
         # text = Subtitles('FAST\nFURIOUS\nFANCY', self.text_speed, './data/fonts/Dogfish/Dogfish.ttf')
-
         title = Subtitles(self.title, self.text_speed, font=self.font)
         title.font_scale = 3
         title.thick = 3
