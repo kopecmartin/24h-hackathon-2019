@@ -23,6 +23,8 @@ ANIMATION = "animation"
 FONT = "font"
 STICKER = "sticker"
 PLATFORM = "platform"
+SPEED = "speed"
+MULTI = "multi"
 
 # used for csv data
 PRODUCT_NAME = 1
@@ -61,6 +63,22 @@ def parse_args():
         default="green",
         required=False,
         help="Color effect to use",
+    )
+    parser.add_argument(
+        "-s",
+        "--speed",
+        default=6,
+        type=int,
+        required=False,
+        help="Speed of the animation (pixels per frame)",
+    )
+    parser.add_argument(
+        "-m",
+        "--multi",
+        default=False,
+        type=bool,
+        required=False,
+        help="Multiple product images on video frame.",
     )
 
     return parser.parse_args()
@@ -127,7 +145,10 @@ if __name__ == "__main__":
         text=data[PRODUCT_PRICE].strip('"'),
         text_speed=60,
         font=args[FONT],
-        color_effect=args[EFFECT]
+        color_effect=args[EFFECT],
+        animation=args[ANIMATION],
+        speed=args[SPEED],
+        multi=args[MULTI],
     )
 
     # ad = Video()

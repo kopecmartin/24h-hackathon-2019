@@ -3,6 +3,7 @@ import cv2
 from shape import Shape
 from subtitles import Subtitles
 from effect import Effect
+from random import randint
 
 
 class Video:
@@ -21,7 +22,8 @@ class Video:
                  font=None,
                  speed=6,
                  color_effect="red",
-                 animation=None):
+                 animation=None,
+                 multi=False):
         self.video_file = video_file
         self.width = width
         self.height = height
@@ -48,8 +50,7 @@ class Video:
         self.speed = speed
         self.color_effect = color_effect
         self.animation = animation
-        self.seconds = 10
-        self.radius = 150
+        self.multi = multi
 
         self.paint_x = 0
         self.paint_y = 0
@@ -67,15 +68,26 @@ class Video:
         # find out the video dimensions
         self.height, self.width, _ = cap.read()[1].shape
 
-        shape = Shape(
-            self.width,
-            self.height,
-            self.paint_x,
-            self.paint_y,
-            self.speed,
-            self.image_paths[index % len(self.image_paths)],
-            'curve2',
-        )
+        if not self.multi:
+            shape = Shape(
+                self.width,
+                self.height,
+                self.paint_x,
+                self.paint_y,
+                self.speed,
+                self.image_paths[index % len(self.image_paths)],
+                self.animation,
+            )
+        else:
+            shapes = [Shape(
+                self.width,
+                self.height,
+                randint(0, self.width),
+                randint(0, self.height),
+                self.speed,
+                image,
+                "fall",  # must be with fall!!! it's 02:03am
+            ) for image in self.image_paths[:2]]
 
         effect = Effect(self.color_effect)
         text = Subtitles(self.text, self.text_speed,
@@ -108,7 +120,11 @@ class Video:
 
             if ret is True:
                 frame = effect.apply(frame)
-                shape.paint(frame)
+                if self.multi:
+                    for shape in shapes:
+                        shape.paint(frame)
+                else:
+                    shape.paint(frame)
                 frame = title.show_title(frame, self.width, self.height)
                 # frame = text.show_low(frame, self.width, self.height)
                 frame = text.show_price(frame, self.width, self.height)
@@ -117,7 +133,7 @@ class Video:
                 cv2.imshow("Frame", frame)
                 out.write(frame)
                 # print(self.image_paths[index % len(self.image_paths)], index + 1)
-                if shape.end:
+                if not self.multi and shape.end:
                     index += 1
                     if index >= len(self.image_paths):
                         index = 0
@@ -129,7 +145,7 @@ class Video:
                         self.paint_y,
                         self.speed,
                         self.image_paths[index % len(self.image_paths)],
-                        'curve2',
+                        self.animation,
                     )
 
                 # Press Q on keyboard to  exit
