@@ -86,6 +86,17 @@ class Video:
         title.font_scale = 3
         title.thick = 3
         # Read until video is completed
+
+        # Default resolutions of the frame are obtained.The default resolutions are system dependent.
+        # We convert the resolutions from float to integer.
+        # frame_width = int(cap.get(3))
+        # frame_height = int(cap.get(4))
+
+        # print("width ", frame_width)
+        # print("height ", frame_height)
+        out = cv2.VideoWriter('outpy.mp4', cv2.VideoWriter_fourcc(*'MP4V'),
+                              17, (self.width, self.height))
+
         while cap.isOpened():
             # Capture frame-by-frame
             ret, frame = cap.read()
@@ -104,6 +115,7 @@ class Video:
                 # if title.counter == 1:
                 #     text.counter = title.counter
                 cv2.imshow("Frame", frame)
+                out.write(frame)
                 # print(self.image_paths[index % len(self.image_paths)], index + 1)
                 if shape.end:
                     index += 1

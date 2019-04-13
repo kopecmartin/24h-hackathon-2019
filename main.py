@@ -93,16 +93,16 @@ if __name__ == "__main__":
     for key in args.keys():
         print(key, ":", args[key])
 
-    data = get_random_line().split("\t")
-
     downloaded = []
-    images = data[PRODUCT_IMAGES].split(",") + \
-        [data[PRODUCT_IMAGE].strip('"')]
-    for image in images:
-        try:
-            downloaded += [get_image(image.strip('"'))]
-        except ValueError:
-            continue
+    while not downloaded:
+        data = get_random_line().split("\t")
+        images = data[PRODUCT_IMAGES].split(",") + \
+            [data[PRODUCT_IMAGE].strip('"')]
+        for image in images:
+            try:
+                downloaded += [get_image(image.strip('"'))]
+            except ValueError:
+                continue
 
     print("=======================")
     print(data[PRODUCT_NAME])
