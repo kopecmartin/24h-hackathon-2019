@@ -1,8 +1,8 @@
-# TBD
+# 24h-hackathon-2019
 
 
 ## About
-The project was implemented during 24h hackathon competition in Brno organised
+This project was implemented during 24h hackathon competition in Brno organised
 by [UnIT](https://unitbrno.cz/) Brno on 12-13.4.2019.
 
 ## Task
@@ -20,6 +20,7 @@ Therefore the app should be:
 
 We had only 24 hours to implement it, so don't expect anything awesome and
 directly ready to use ...
+
 However our goal was to create a CLI application which allows a user to define
 a set of pictures, let the user to choose an animation, effect, font of the
 captions and the application would take care of the rest.
@@ -28,9 +29,9 @@ script so that more videos of any number of product pictures can be created.
 
 We had problems to find any usable library for the animations also called
 easing so we had to develop something on our own. We came up with a quite
-interesting idea of defining several points on your screen/frame/picture
+interesting idea of defining several points on a screen/frame/picture
 through a user would like an animation to go through. Then the app interpolates
-the given points, create a function which the user can use for getting a y-axe
+the given points, creates a function which the user can use for getting a y-axe
 point for any given x-axe point - and that's mostly what's needed for creating
 an animation.
 
