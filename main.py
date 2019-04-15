@@ -82,7 +82,7 @@ def parse_args():
         "-m",
         "--multi",
         default=False,
-        type=bool,
+        action="store_true",
         required=False,
         help="Multiple product images on video frame.",
     )
